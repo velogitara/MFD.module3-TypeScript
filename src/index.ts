@@ -11,14 +11,14 @@ interface NormalizedData {
 }
 
 const normalizeData = (unnormalizedData: Post[]): NormalizedData => {
-    const byId: { [id: string]: Post } = {};
-    const allIds: string[] = [];
-    for (const post of unnormalizedData) {
-        byId[post.id] = post;
-        allIds.push(post.id);
-    }
-
-    return { byId, allIds };
+    return unnormalizedData.reduce<NormalizedData>(
+        (acc, post) => {
+            acc.byId[post.id] = post;
+            acc.allIds.push(post.id);
+            return acc;
+        },
+        { byId: {}, allIds: [] }
+    );
 };
 
 console.log(normalizeData(posts));
