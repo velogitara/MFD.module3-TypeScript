@@ -1,6 +1,9 @@
 {
-  "Watch": ["src"],
-  "ext": ".ts, .js",
-  "ignore": [],
-  "exec": "node --loader ts-node/esm ./src/index.ts"
+    "Watch": ["src"],
+    "ext": ".ts, .js",
+    "ignore": [],
+    "exec": "node --loader ts-node/esm ./src/index.ts",
+    "events": {
+        "start": "clear"
+    }
 }
