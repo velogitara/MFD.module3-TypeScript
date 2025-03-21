@@ -8,21 +8,25 @@ interface Comment {
     body: string;
 }
 
-const getData = (url: string): Promise<Comment[]> => {
-    return fetch(url)
-        .then((response: Response): Promise<Comment[]> => {
-            if (!response.ok) {
-                throw new Error(`Ошибка запроса: ${response.status}`);
-            }
-            return response.json() as Promise<Comment[]>;
-        })
-        .catch((error: Error): Comment[] => {
-            console.log(
-                '!!!!!!!!!!Произошла ошибка при выполнении запроса:',
-                error
-            );
-            return [];
-        });
+const getData = async (url: string): Promise<Comment[]> => {
+    try {
+        const response: Response = await fetch(url);
+        if (!response.ok) {
+            throw new Error(`Ошибка запроса: ${response.status}`);
+        }
+        const data = await response.json();
+
+        if (
+            !Array.isArray(data) ||
+            !data.every((item) => 'id' in item && 'email' in item)
+        ) {
+            throw new Error('Неверный формат данных');
+        }
+        return data as Comment[];
+    } catch (error) {
+        console.error('Ошибка при выполнении запроса:', error);
+        throw error;
+    }
 };
 
 getData(COMMENTS_URL).then((data: Comment[]) => {
